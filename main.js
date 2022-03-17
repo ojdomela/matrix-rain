@@ -1,7 +1,7 @@
 import Matrix from './matrix.js'
 
 export function getRandChar() {
-    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
+    const chars = options.chars;
     const listOfChars = chars.split("")
     const randChar = listOfChars[Math.floor(Math.random() * listOfChars.length)]
     return randChar
@@ -9,15 +9,15 @@ export function getRandChar() {
 
 const options = {
     canvas: document.getElementById("matrix"),
-    fontSize: 14,
+    fontSize: 18,
     fontFamily: "roboto",
     animationSpeed: 75,
     chars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}",
-    dropPercentage: 75,
-    charChangeRate: 10,
-    opacityChangeRate: 5,
-    fadedPercentage: 5,
-    hiddenPercentage: 35,
+    dropPercentage: 30,
+    charChangeRate: 16,
+    opacityChangeRate: 4,
+    fadedPercentage: 25,
+    hiddenPercentage: 25,
 }
 
 const matrix = new Matrix(options)

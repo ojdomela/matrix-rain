@@ -18,7 +18,8 @@ export default class Matrix {
             fadedPercentage : options.fadedPercentage,
         }
 
-        this.active = true;
+        this.ending = false;
+        this.finished = false;
         this.canvas.height = Number(this.canvasStyle.height.slice(0, this.canvasStyle.height.length - 2))
         this.canvas.width = Number(this.canvasStyle.width.slice(0, this.canvasStyle.width.length - 2))
         this.canvasRatio = this.canvas.width / this.canvas.height
@@ -30,12 +31,11 @@ export default class Matrix {
         this.textAlign = "center"
         this.run = this.run.bind(this)
         this.disable = this.disable.bind(this)
-        this.clear = this.clear.bind(this)
         this.clear()
     }
 
     disable() {
-        this.active = false;
+        this.ending = true;
     }
 
     clear() {
@@ -45,6 +45,7 @@ export default class Matrix {
     }
 
     generateColumn() {
+        if (this.clearing) return
         const dropOdds = Math.floor(Math.random() * 100) / 100
         if (dropOdds >= this.dropRate) return
         this.x = this.availableColumns.splice(Math.floor(Math.random() * this.availableColumns.length), 1)
@@ -52,17 +53,22 @@ export default class Matrix {
     }
 
     run(time) {
-        this.render(time)
-        if (this.active) window.requestAnimationFrame(this.run)
-        if (!this.active) this.active = true
+        if (this.finished) this.finished = false;
+        
+        if (!this.ending || this.activeColumns.length > 0) {
+            console.time("render")
+            console.log(this.ending)
+            console.log(this.activeColumns)
+            this.render(time)
+            console.timeEnd("render")
+            window.requestAnimationFrame(this.run)
+        } else {
+            this.finished = true;
+            this.ending = false;
+        }
     }
 
-    render(time) {
-        this.iteration = Math.floor(time / this.animationSpeed)
-        if (this.previous === this.iteration) return
-        this.previous = this.iteration
-        this.clear()
-
+    generateRain() {
         if (this.canvasRatio <= 1) {
             const noColumnChance = Math.floor(Math.random() * 100) / 100
             if (noColumnChance < this.canvasRatio) this.generateColumn()
@@ -75,15 +81,26 @@ export default class Matrix {
         while (extraColumnChance < canvasRatio--) {
             this.generateColumn()
         }
-        this.activeColumns.forEach((column, index) => {
+    }
+
+    render(time) {
+        this.iteration = Math.floor(time / this.animationSpeed)
+        if (this.previous === this.iteration) return
+        this.previous = this.iteration
+        this.clear()
+
+        if (!this.ending) this.generateRain()
+
+        while (this.activeColumns[0]?.cleared) {
+            this.activeColumns.shift()
+        }
+
+        this.activeColumns.forEach(column => {
             column.draw()
             if (column.completed && !column.reused) {
                 column.reused = true;
                 this.availableColumns.push(column.position)
             }
         })
-        while (this.activeColumns[0]?.cleared) {
-            this.activeColumns.shift()
-        }
     }
 }
