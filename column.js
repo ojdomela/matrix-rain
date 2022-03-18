@@ -2,7 +2,7 @@ import { getRandChar } from "./main.js"
 import Letter from "./letter.js"
 
 export default class Column {
-    constructor(ctx, position, ctxHeight, fontSize, letterOptions) {
+    constructor(ctx, position, ctxHeight, fontSize, letterOptions, wordOptions) {
         this.context = ctx
         this.fontSize = fontSize
         this.completed = false
@@ -12,12 +12,19 @@ export default class Column {
         this.y = 0
         this.letters = []
         this.letterOptions = letterOptions
+        this.wordOptions = wordOptions
         this.draw.bind(this)
     }
 
     draw() {
         this.context.fillStyle = "rgb(55,255,55)"
-        this.completed ? this.empty() : this.fill()
+        if (this.completed) {
+            this.empty()
+        } else if (this.wordOptions) {
+            this.finalize()
+        } else {
+            this.fill()
+        }
     }
 
     empty() {
@@ -38,5 +45,9 @@ export default class Column {
             this.y = 0;
             this.letters.shift()
         }
+    }
+
+    finalize() {
+
     }
 }
