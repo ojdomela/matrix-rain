@@ -13,12 +13,12 @@ const options = {
     fontFamily: "roboto",
     animationSpeed: 75,
     chars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}",
-    dropPercentage: 4,
+    dropPercentage: 10,
     charChangeRate: 16,
     opacityChangeRate: 4,
     fadedPercentage: 25,
     hiddenPercentage: 25,
-    word: "What about a big sentence, eh"
+    word: ["Word?"]
 }
 
 const matrix = new Matrix(options)
@@ -29,4 +29,4 @@ const clearBtn = document.querySelector('#clear')
 wordBtn.onclick = matrix.greet
 runBtn.onclick = matrix.run
 disableBtn.onclick = matrix.disable
-clearBtn.onclick = matrix.clear
+clearBtn.onclick = matrix.stop

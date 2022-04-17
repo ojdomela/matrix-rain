@@ -12,43 +12,60 @@ export default class Matrix {
         this.chars = options.chars.split("")
         this.dropRate = options.dropPercentage / 100
         this.letterOptions = {
+            fontSize: options.fontSize,
             opacityChangeRate: options.opacityChangeRate,
             charChangeRate: options.charChangeRate,
             hiddenPercentage: options.hiddenPercentage,
             fadedPercentage: options.fadedPercentage,
         }
         this.word = options.word
+        this.ending = false
+        this.finished = false
 
-        const wordPosition = this.word.split("").map((char, index) => {
+        // set canvas width and height + dependant values
+        this.canvas.height = Number(this.canvasStyle.height.slice(0, this.canvasStyle.height.length - 2))
+        this.canvas.width = Number(this.canvasStyle.width.slice(0, this.canvasStyle.width.length - 2))
+        this.canvasRatio = this.canvas.width / this.canvas.height
+        this.activeColumns = []
+        this.availableColumns = []
+        for (let i = 0; i < (this.canvas.width / this.fontSize); i++) {
+            this.availableColumns[i] = i - 0.01;
+        }
+
+        const wordPosition = this.word[0].split("").map((char, index) => {
             if (char === "") return
             return {
                 char,
                 index: 2 * index
             }
         })
-        console.log(wordPosition.length + 6)
-        this.ending = false;
-        this.finished = false;
-        this.canvas.height = Number(this.canvasStyle.height.slice(0, this.canvasStyle.height.length - 2))
-        this.canvas.width = Number(this.canvasStyle.width.slice(0, this.canvasStyle.width.length - 2))
-        this.canvasRatio = this.canvas.width / this.canvas.height
-        this.activeColumns = []
-        do {
-            this.availableColumns = []
-            for (let i = 0; i < (this.canvas.width / this.fontSize); i++) {
-                this.availableColumns[i] = i - 0.5;
-            }
-            console.log(this.availableColumns.length)
-            console.log(wordPosition.length + 6)
-        } while (false)
-        this.textAlign = "center"
+
+        // if the word fits, determine starting index
+        if (this.availableColumns.length >= ((wordPosition.length * 2) + 5)) {
+            this.wordIndex = Math.floor((this.availableColumns.length - (wordPosition.length*2 - 1)) / 2)
+        } else {
+            // TODO error handling for lengthy words
+            console.log("no fit!")
+        }
         
+        this.wordColumns = []
+        for (let i = 0; i < wordPosition.length; i++) {
+            const columnIndex = this.wordIndex + wordPosition[i].index
+            this.wordColumns.push(this.availableColumns[columnIndex])
+        }
+        this.wordHeight = Math.floor(this.canvas.height / this.fontSize / 2)
+        console.log(this.wordColumns)
+
         this.run = this.run.bind(this)
         this.disable = this.disable.bind(this)
-        this.clear = this.clear.bind(this)
+        this.stop = this.stop.bind(this)
+        this.greet = this.greet.bind(this)
         this.clear()
-        window.onresize = this.clear
+
+        // TODO - bind this to new matrix instead later
+        window.onresize = this.stop
     }
+
     clear() {
         window.cancelAnimationFrame(this.loop)
         this.ctx.fillStyle = "#000000"
@@ -84,7 +101,11 @@ export default class Matrix {
     }
 
     greet() {
-
+        this.word[0].split("").forEach((letter, index) => {
+            this.ctx.fillStyle = "rgb(255,255,255)"
+            this.ctx.fillText(letter, this.wordColumns[index] * this.fontSize, this.wordHeight * this.fontSize)
+            this.ctx.fillStyle = "rgb(55,255,55)"
+        });
     }
 
     render(time) {
@@ -112,15 +133,20 @@ export default class Matrix {
         if (this.finished) this.finished = false;
 
         if (!this.ending || this.activeColumns.length > 0) {
-            console.time("render")
-            console.log(this.ending)
-            console.log(this.activeColumns)
             this.render(time)
-            console.timeEnd("render")
             this.loop = window.requestAnimationFrame(this.run)
         } else {
             this.finished = true;
             this.ending = false;
+        }
+    }
+
+    stop() {
+        this.clear()
+        this.activeColumns = []
+        this.availableColumns = []
+        for (let i = 0; i < (this.canvas.width / this.fontSize); i++) {
+            this.availableColumns[i] = i - 0.5;
         }
     }
 }
