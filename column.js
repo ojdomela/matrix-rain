@@ -37,7 +37,6 @@ export default class Column {
     }
 
     fill() {
-        console.log(this.y)
         this.context.fillStyle = "rgb(255,255,255)"
         this.context.fillText(getRandChar(), this.position * this.fontSize, this.y + this.fontSize)
         this.context.fillStyle = "rgb(55,255,55)"

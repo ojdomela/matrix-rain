@@ -102,9 +102,8 @@ export default class Matrix {
 
     greet() {
         this.word[0].split("").forEach((letter, index) => {
-            this.ctx.fillStyle = "rgb(255,255,255)"
-            this.ctx.fillText(letter, this.wordColumns[index] * this.fontSize, this.wordHeight * this.fontSize)
             this.ctx.fillStyle = "rgb(55,255,55)"
+            this.ctx.fillText(letter, this.wordColumns[index] * this.fontSize, this.wordHeight * this.fontSize)
         });
     }
 
