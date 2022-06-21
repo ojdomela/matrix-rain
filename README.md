@@ -2,7 +2,7 @@
 
 Building towards an npm package. For a quick look, inspect the main.js. 
 
-List of functionality below; work in progress marked (pending) 
+List of functionality below; work in progress marked (pending). The biggest hurdle is probably refactoring state management.
 
 The end result should expose **adjustable** options, including:
 
