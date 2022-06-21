@@ -50,19 +50,24 @@ export default class Column {
         }
     }
 
+
+    // TBA: This method to "finish up" the canvas
+    // Ending in the word array
     finalize() {
-        if (!this.completed) {
-            this.context.fillStyle = "rgb(255,255,255)"
-            this.context.fillText(getRandChar(), this.position * this.fontSize, this.y + this.fontSize)
-            this.context.fillStyle = "rgb(55,255,55)"
-            this.letters.push(new Letter(this.context, this.letters.length, this.letterOptions))
-        }
-        this.letters.forEach(letter => letter.draw())
-        this.y += this.fontSize
-        if (this.y > this.finalWordChar.y) {
-            this.completed = true
-            this.reused = true
-            if (this.letters.length > 1) this.letters.shift()
-        }
+        console.log(this.finalWordChar)
+        this.fill()
+        // if (!this.completed) {
+        //     this.context.fillStyle = "rgb(255,255,255)"
+        //     this.context.fillText(getRandChar(), this.position * this.fontSize, this.y + this.fontSize)
+        //     this.context.fillStyle = "rgb(55,255,55)"
+        //     this.letters.push(new Letter(this.context, this.letters.length, this.letterOptions))
+        // }
+        // this.letters.forEach(letter => letter.draw())
+        // this.y += this.fontSize
+        // if (this.y > this.finalWordChar.y) {
+        //     this.completed = true
+        //     this.reused = true
+        //     if (this.letters.length > 1) this.letters.shift()
+        // }
     }
 }

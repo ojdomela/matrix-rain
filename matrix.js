@@ -1,5 +1,9 @@
 import Column from './column.js'
 
+
+// The code quality of this class is like the sun
+// Looking at it for prolonged periods may damage your eyesight
+
 export default class Matrix {
     constructor(options) {
         this.canvas = options.canvas
@@ -42,12 +46,12 @@ export default class Matrix {
 
         // if the word fits, determine starting index
         if (this.availableColumns.length >= ((wordPosition.length * 2) + 5)) {
-            this.wordIndex = Math.floor((this.availableColumns.length - (wordPosition.length*2 - 1)) / 2)
+            this.wordIndex = Math.floor((this.availableColumns.length - (wordPosition.length * 2 - 1)) / 2)
         } else {
             // TODO error handling for lengthy words
             console.log("no fit!")
         }
-        
+
         this.wordColumns = []
         for (let i = 0; i < wordPosition.length; i++) {
             const columnIndex = this.wordIndex + wordPosition[i].index
@@ -55,6 +59,7 @@ export default class Matrix {
         }
         this.wordHeight = Math.floor(this.canvas.height / this.fontSize / 2)
         console.log(this.wordColumns)
+        console.log(this.availableColumns)
 
         this.run = this.run.bind(this)
         this.disable = this.disable.bind(this)
@@ -82,9 +87,17 @@ export default class Matrix {
         const dropOdds = Math.floor(Math.random() * 100) / 100
         if (dropOdds >= this.dropRate) return
         this.x = this.availableColumns.splice(Math.floor(Math.random() * this.availableColumns.length), 1)
-        if (this.x[0]) this.activeColumns.push(new Column(this.ctx, this.x[0], this.canvas.height, this.fontSize, this.letterOptions))
+        if (this.x[0]) {
+            console.log(this.x[0])
+            console.log(this.wordColumns)
+            console.log(this.wordColumns.find(position => position === this.x[0]))
+            this.activeColumns.push(
+                new Column(this.ctx, this.x[0], this.canvas.height, this.fontSize, this.letterOptions)
+            )
+        }
     }
 
+    // controls amount of columns spawned proportional to ratio: wide canvas gets more columns, thin canvas gets less
     generateRain() {
         if (this.canvasRatio <= 1) {
             const noColumnChance = Math.floor(Math.random() * 100) / 100
