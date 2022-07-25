@@ -10,8 +10,7 @@ export default class Matrix {
         this.canvasStyle = window.getComputedStyle(options.canvas)
         this.ctx = options.canvas.getContext("2d")
         this.fontSize = options.fontSize
-        this.fontFamily = options.fontFamily
-        this.font = `${options.fontSize}px ${options.fontFamily}`
+        this.font = `${options.fontSize}px roboto`
         this.animationSpeed = options.animationSpeed
         this.chars = options.chars.split("")
         this.dropRate = options.dropPercentage / 100
@@ -86,11 +85,8 @@ export default class Matrix {
         if (this.clearing) return
         const dropOdds = Math.floor(Math.random() * 100) / 100
         if (dropOdds >= this.dropRate) return
-        this.x = this.availableColumns.splice(Math.floor(Math.random() * this.availableColumns.length), 1)
-        if (this.x[0]) {
-            console.log(this.x[0])
-            console.log(this.wordColumns)
-            console.log(this.wordColumns.find(position => position === this.x[0]))
+        this.x = this.availableColumns.splice(Math.floor(Math.random() * this.availableColumns.length), 1)[0]
+        if (this.x) {
             this.activeColumns.push(
                 new Column(this.ctx, this.x[0], this.canvas.height, this.fontSize, this.letterOptions)
             )
